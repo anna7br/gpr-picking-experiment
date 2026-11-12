@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPR surface &amp; bed picking tool</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root { font-family: system-ui, sans-serif; }
+  body { margin: 0; color: #111; background: #f5f6f8; }
+  header { padding: 8px 14px; background: #1f3b57; color: #fff; display:flex; gap:14px; align-items:center; flex-wrap:wrap;}
+  header b { font-size: 15px; }
+  #bar { padding: 8px 14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:#fff; border-bottom:1px solid #ddd;}
+  button { padding:6px 10px; border:1px solid #bbb; background:#fff; border-radius:5px; cursor:pointer; font-size:13px;}
+  button:hover { background:#eef3f8; }
+  button.primary { background:#1f6fc4; color:#fff; border-color:#1f6fc4; }
+  .infobtn { padding:6px 10px; border:1px solid #cdd3da; background:#fff; color:#1f3b57; border-radius:5px; font-size:13px; font-weight:600; text-decoration:none; }
+  .infobtn:hover { background:#eef1f4; }
+  .openbtn { padding:6px 10px; border:1px solid #1f6fc4; background:#fff; color:#1f6fc4; border-radius:5px;
+             font-size:13px; font-weight:600; cursor:pointer; }
+  .openbtn:hover { background:#eef3f8; }
+  button.act-surface { background:#00b3b3; color:#fff; border-color:#00b3b3; }
+  button.act-bed { background:#ff8c00; color:#fff; border-color:#ff8c00; }
+  canvas { display:block; background:#222; touch-action:none;
+    cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2724%27%20height%3D%2724%27%3E%3Cg%20stroke%3D%27black%27%20stroke-width%3D%273.5%27%20stroke-linecap%3D%27round%27%3E%3Cline%20x1%3D%2712%27%20y1%3D%271%27%20x2%3D%2712%27%20y2%3D%278%27%2F%3E%3Cline%20x1%3D%2712%27%20y1%3D%2716%27%20x2%3D%2712%27%20y2%3D%2723%27%2F%3E%3Cline%20x1%3D%271%27%20y1%3D%2712%27%20x2%3D%278%27%20y2%3D%2712%27%2F%3E%3Cline%20x1%3D%2716%27%20y1%3D%2712%27%20x2%3D%2723%27%20y2%3D%2712%27%2F%3E%3C%2Fg%3E%3Cg%20stroke%3D%27magenta%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%3E%3Cline%20x1%3D%2712%27%20y1%3D%271%27%20x2%3D%2712%27%20y2%3D%278%27%2F%3E%3Cline%20x1%3D%2712%27%20y1%3D%2716%27%20x2%3D%2712%27%20y2%3D%2723%27%2F%3E%3Cline%20x1%3D%271%27%20y1%3D%2712%27%20x2%3D%278%27%20y2%3D%2712%27%2F%3E%3Cline%20x1%3D%2716%27%20y1%3D%2712%27%20x2%3D%2723%27%20y2%3D%2712%27%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%271.3%27%20fill%3D%27magenta%27%2F%3E%3C%2Fsvg%3E") 12 12, crosshair; }
+  canvas.seismic {
+    cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2724%27%20height%3D%2724%27%3E%3Cg%20stroke%3D%27black%27%20stroke-width%3D%273.5%27%20stroke-linecap%3D%27round%27%3E%3Cline%20x1%3D%2712%27%20y1%3D%271%27%20x2%3D%2712%27%20y2%3D%278%27%2F%3E%3Cline%20x1%3D%2712%27%20y1%3D%2716%27%20x2%3D%2712%27%20y2%3D%2723%27%2F%3E%3Cline%20x1%3D%271%27%20y1%3D%2712%27%20x2%3D%278%27%20y2%3D%2712%27%2F%3E%3Cline%20x1%3D%2716%27%20y1%3D%2712%27%20x2%3D%2723%27%20y2%3D%2712%27%2F%3E%3C%2Fg%3E%3Cg%20stroke%3D%27lime%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%3E%3Cline%20x1%3D%2712%27%20y1%3D%271%27%20x2%3D%2712%27%20y2%3D%278%27%2F%3E%3Cline%20x1%3D%2712%27%20y1%3D%2716%27%20x2%3D%2712%27%20y2%3D%2723%27%2F%3E%3Cline%20x1%3D%271%27%20y1%3D%2712%27%20x2%3D%278%27%20y2%3D%2712%27%2F%3E%3Cline%20x1%3D%2716%27%20y1%3D%2712%27%20x2%3D%2723%27%20y2%3D%2712%27%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%271.3%27%20fill%3D%27lime%27%2F%3E%3C%2Fsvg%3E") 12 12, crosshair; }
+  #stage { position:relative; }
+  #status { position:absolute; top:10px; left:10px; background:rgba(31,59,87,.9); color:#fff;
+            padding:7px 12px; border-radius:8px; font-size:13px; line-height:1.5; pointer-events:none;
+            box-shadow:0 1px 5px rgba(0,0,0,.3); max-width:70%; }
+  #status .last { color:#ffd27f; font-weight:700; }
+  #status .sub { opacity:.85; font-size:12px; }
+  #donebar { position:absolute; top:16px; left:50%; transform:translateX(-50%); display:none;
+             background:#e8f5ec; border:1px solid #8fcfa6; color:#14532d; padding:14px 40px 14px 18px;
+             border-radius:10px; font-size:14px; line-height:1.5; box-shadow:0 3px 14px rgba(0,0,0,.22);
+             max-width:78%; text-align:center; z-index:6; }
+  #donebar.on { display:block; }
+  #donebar b { color:#14532d; }
+  #doneClose { position:absolute; top:5px; right:7px; border:none; background:transparent; font-size:18px;
+               line-height:1; cursor:pointer; color:#14532d; padding:2px 6px; }
+  #doneClose:hover { background:transparent; }
+  label.chk { font-size:13px; display:flex; gap:5px; align-items:center; }
+  .sep { width:1px; height:22px; background:#ccc; margin:0 4px; }
+  .hint { font-size:12px; color:#cdd; }
+  .cmaplabel { font-size:13px; }
+  .swatch { display:inline-flex; align-items:center; gap:6px; padding:3px 8px; font-size:13px; }
+  .swatch .grad { width:38px; height:14px; border-radius:3px; border:1px solid #9aa3ad; display:inline-block; }
+  .grad-gray { background:linear-gradient(90deg,#111,#fff); }
+  .grad-seis { background:linear-gradient(90deg,#1d2bd6 0%,#fff 50%,#e21d1d 100%); }
+  .swatch.active { border-color:#1f6fc4; background:#eef3f8; box-shadow:inset 0 0 0 2px #1f6fc4; }
+  /* image-loading progress bar */
+  #loadbar { display:none; height:4px; background:#dde3ea; overflow:hidden; position:relative; }
+  #loadbar.on { display:block; }
+  #loadfill { height:100%; width:0%; background:#1f6fc4; transition:width .1s linear; }
+  #loadbar.indet #loadfill { width:35%; position:absolute; animation:indet 1.1s ease-in-out infinite; }
+  @keyframes indet { 0%{left:-35%;} 100%{left:100%;} }
+</style>
+</head>
+<body>
+<header>
+  <b>GPR surface &amp; bed picking</b>
+  <span class="hint">choose a horizon, then left-click along it &nbsp;&bull;&nbsp; drag a point to move it &nbsp;&bull;&nbsp; right-drag = pan &nbsp;&bull;&nbsp; wheel = zoom</span>
+</header>
+<div id="bar">
+  <a id="infobtn" class="infobtn" href="index.html" target="_blank" rel="noopener" title="Open the instructions in a new tab">? Instructions</a>
+  <label class="openbtn" title="Load your own radargram images (PNG/JPG) from disk">Open images…<input type="file" id="files" accept="image/*" multiple hidden></label>
+  <span class="sep"></span>
+  <span style="font-size:13px;">Picking:</span>
+  <button id="bSurface">Surface (s)</button>
+  <button id="bBed">Bed (b)</button>
+  <span class="sep"></span>
+  <button id="prev">&larr; Prev</button>
+  <button id="next">Next &rarr;</button>
+  <button id="undo">Undo point</button>
+  <button id="clear">Clear horizon</button>
+  <button id="fit">Reset view</button>
+  <span class="cmaplabel">Colormap:</span>
+  <button class="swatch active" id="cmGray" title="Grayscale"><span class="grad grad-gray"></span>Gray</button>
+  <button class="swatch" id="cmSeis" title="Seismic (blue–white–red)"><span class="grad grad-seis"></span>Seismic</button>
+  <label class="chk"><input type="checkbox" id="uninterp"> bed not interpretable</label>
+  <span style="flex:1"></span>
+  <button id="download" class="primary">Download my results (CSV)</button>
+</div>
+<div id="loadbar"><div id="loadfill"></div></div>
+<div id="stage">
+  <canvas id="cv"></canvas>
+  <div id="status"></div>
+  <div id="donebar">
+    <button id="doneClose" aria-label="dismiss">&times;</button>
+    <b>🎉 All radargrams done!</b><br>
+    You have picked every radargram. Click <b>Download my results (CSV)</b> to save your picks.
+  </div>
+</div>
+
+<script src="images.js"></script>
+<script>
+/* ============================================ CONFIG ============================================
+   Images can come from two places:
+   1. Hosted: list the files in images.js (window.IMAGES = [...]) or BASE_URL + "images.json";
+      make_images_json.py writes both. Images are then loaded from BASE_URL + filename.
+   2. Local:  the "Open images…" button loads PNG/JPG files from the user's disk (nothing is uploaded).
+   ================================================================================================ */
+const BASE_URL = "images/";          // "" = same folder as this file; else "https://host/path/"
+let   IMAGES   = (window.IMAGES || []).slice();          // if empty, try BASE_URL + "images.json"
+let   LOCAL    = null;                                   // filename -> object URL when images are opened from disk
+/* ================================================================================================ */
+
+const COLORS = { surface:"#00d6d6", bed:"#ff8c00" };
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+let W = 1100, H = 660;
+function resize(){ W=Math.max(600,window.innerWidth-2); H=Math.max(380,window.innerHeight-150); cv.width=W; cv.height=H; draw(); }
+window.addEventListener('resize', resize);
+
+let analyst = "";   // asked for at Download time, not before picking
+let dirty=false;   // picks changed since the last download (warn before leaving the page)
+let active = "surface";
+let idx = 0;
+const ann = {};
+let img = new Image();
+let view = {s:1, tx:0, ty:0};
+let panning=false, panStart=null;
+let dragPt=null, dragArr=null; const HIT=9;   // for moving an existing point (hit radius, screen px)
+let cmap="gray";                       // "gray" | "seismic"
+let seismicCanvas=null, seismicFor=null, LUT=null;
+
+async function init(){
+  resize();
+  if (IMAGES.length === 0){
+    try { const r = await fetch(BASE_URL+"images.json"); if (r.ok) IMAGES = await r.json(); }
+    catch(e){ /* no hosted list -> wait for "Open images…" */ }
+  }
+  startSet(IMAGES);
+}
+function startSet(list){             // (re)initialise the annotation state for a list of image names
+  IMAGES = list.slice(); idx = 0;
+  for (const k in ann) delete ann[k];
+  IMAGES.forEach(fn => ann[fn] = {surface:[], bed:[], uninterp:false, w:0, h:0, loaded:false});
+  img = new Image(); dirty = false;
+  setActive("surface");
+  if (IMAGES.length) load(0); else { draw(); status(); }
+}
+document.getElementById('files').onchange = e=>{
+  const files = Array.from(e.target.files||[]).filter(f=>/^image\//.test(f.type));
+  e.target.value = "";
+  if (!files.length) return;
+  if (dirty && !confirm("Opening new images discards the current picks. Download them first if you want to keep them. Continue?")) return;
+  if (LOCAL) Object.values(LOCAL).forEach(u=>URL.revokeObjectURL(u));
+  files.sort((a,b)=>a.name.localeCompare(b.name));
+  LOCAL = {}; files.forEach(f=>LOCAL[f.name]=URL.createObjectURL(f));
+  startSet(files.map(f=>f.name));
+};
+function setActive(b){ active=b;
+  document.getElementById('bSurface').className = b==="surface"?"act-surface":"";
+  document.getElementById('bBed').className     = b==="bed"?"act-bed":"";
+  status();
+}
+const loadbar  = document.getElementById('loadbar');
+const loadfill = document.getElementById('loadfill');
+let loadToken = 0;   // increments on every load(); lets us ignore stale/aborted loads
+function barShow(determinate){ loadbar.classList.add('on'); loadbar.classList.toggle('indet', !determinate); loadfill.style.width = determinate ? '0%' : ''; }
+function barSet(frac){ loadfill.style.width = Math.max(0, Math.min(100, frac*100)).toFixed(0)+'%'; }
+function barHide(){ loadbar.classList.remove('on','indet'); loadfill.style.width='0%'; }
+
+function load(i){
+  if (i<0||i>=IMAGES.length) return; idx=i; const fn=IMAGES[idx];
+  document.getElementById('uninterp').checked = ann[fn].uninterp;
+  const url = (LOCAL && LOCAL[fn]) ? LOCAL[fn] : BASE_URL + fn, token = ++loadToken;
+  status();
+  loadWithProgress(url, fn, token);
+}
+function applyImg(im, fn, token){
+  if (token !== loadToken) return;   // a newer load started; ignore this one
+  img = im; ann[fn].w=img.naturalWidth; ann[fn].h=img.naturalHeight; ann[fn].loaded=true;
+  seismicCanvas=null; seismicFor=null; ensureSeismic(fn);   // recolor the new image if seismic is on
+  syncCmapUI();
+  barHide(); fitView(); draw(); status();
+}
+function plainLoad(url, fn, token){   // no byte-level progress (e.g. file://): show animated bar
+  barShow(false);
+  const im = new Image();
+  im.onload  = ()=> applyImg(im, fn, token);
+  im.onerror = ()=>{ if(token===loadToken){ barHide(); ctx.fillStyle="#fff"; ctx.fillText("Could not load "+fn,20,20); } status(); };
+  im.src = url;
+}
+function blobToImg(blob, fn, token){
+  const u = URL.createObjectURL(blob);
+  const im = new Image();
+  im.onload  = ()=>{ URL.revokeObjectURL(u); applyImg(im, fn, token); };
+  im.onerror = ()=>{ URL.revokeObjectURL(u); if(token===loadToken) barHide(); status(); };
+  im.src = u;
+}
+async function loadWithProgress(url, fn, token){
+  if (!window.fetch || location.protocol === 'file:' || url.startsWith('blob:')) return plainLoad(url, fn, token);
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP '+resp.status);
+    const total = +resp.headers.get('Content-Length') || 0;
+    if (!resp.body || !total) {                 // length unknown -> indeterminate
+      barShow(false);
+      const blob = await resp.blob();
+      if (token!==loadToken) return;
+      return blobToImg(blob, fn, token);
+    }
+    barShow(true);
+    const reader = resp.body.getReader();
+    const chunks = []; let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (token!==loadToken) { reader.cancel(); return; }   // user navigated away
+      chunks.push(value); received += value.length;
+      barSet(received/total);
+    }
+    if (token!==loadToken) return;
+    blobToImg(new Blob(chunks, {type: resp.headers.get('Content-Type')||'image/png'}), fn, token);
+  } catch (err) {
+    if (token===loadToken) plainLoad(url, fn, token);       // fall back (CORS/file:///etc.)
+  }
+}
+function fitView(){ const s=Math.min(W/img.naturalWidth,H/img.naturalHeight);
+  view.s=s; view.tx=(W-img.naturalWidth*s)/2; view.ty=(H-img.naturalHeight*s)/2; }
+function toImg(cx,cy){ return {x:(cx-view.tx)/view.s, y:(cy-view.ty)/view.s}; }
+function toScr(p){ return {x:view.tx+p.x*view.s, y:view.ty+p.y*view.s}; }
+function hitPoint(sx,sy){            // nearest point of the ACTIVE horizon within HIT px, else null
+  const a=ann[IMAGES[idx]]; if(!a) return null;
+  let best=null, bd=HIT*HIT;
+  for(const p of a[active]){ const s=toScr(p); const dx=s.x-sx, dy=s.y-sy, d=dx*dx+dy*dy; if(d<bd){ bd=d; best=p; } }
+  return best;
+}
+
+let seq=0;
+function addPoint(arr,p){            // insert ordered left->right by x, so the line never doubles back
+  p.seq=++seq;
+  let i=arr.findIndex(q=>q.x>p.x); if(i<0) i=arr.length;
+  arr.splice(i,0,p);
+}
+function undoPoint(arr){             // remove the most recently ADDED point, not the left/right-most
+  if(!arr.length) return;
+  let mi=0; for(let k=1;k<arr.length;k++) if((arr[k].seq||0)>(arr[mi].seq||0)) mi=k;
+  arr.splice(mi,1);
+}
+function drawLine(pts,color){
+  if(pts.length){ ctx.lineWidth=2; ctx.strokeStyle=color; ctx.fillStyle=color;
+    ctx.beginPath(); pts.forEach((p,k)=>{const s=toScr(p); k?ctx.lineTo(s.x,s.y):ctx.moveTo(s.x,s.y);}); ctx.stroke();
+    pts.forEach(p=>{const s=toScr(p); ctx.beginPath(); ctx.arc(s.x,s.y,3,0,7); ctx.fill();}); }
+}
+function seismicLUT(){               // gray 0..255 -> diverging blue(0)–white(128)–red(255)
+  if(LUT) return LUT;
+  const r=new Uint8Array(256), g=new Uint8Array(256), b=new Uint8Array(256);
+  for(let v=0; v<256; v++){
+    if(v<=128){ const t=v/128;      r[v]=Math.round(255*t); g[v]=Math.round(255*t); b[v]=255; }
+    else      { const t=(v-128)/127; r[v]=255; g[v]=Math.round(255*(1-t)); b[v]=Math.round(255*(1-t)); }
+  }
+  return (LUT={r,g,b});
+}
+function buildSeismic(im){           // recolor the gray image through the LUT (capped size, cached)
+  const MAXD=5000, sc=Math.min(1, MAXD/Math.max(im.naturalWidth, im.naturalHeight));
+  const w=Math.max(1,Math.round(im.naturalWidth*sc)), h=Math.max(1,Math.round(im.naturalHeight*sc));
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const cx=c.getContext('2d'); cx.drawImage(im,0,0,w,h);
+  let id; try{ id=cx.getImageData(0,0,w,h); }catch(e){ return null; }   // tainted (file://) -> null
+  const d=id.data, lut=seismicLUT();
+  for(let i=0;i<d.length;i+=4){ const v=d[i]; d[i]=lut.r[v]; d[i+1]=lut.g[v]; d[i+2]=lut.b[v]; }
+  cx.putImageData(id,0,0); return c;
+}
+function ensureSeismic(fn){
+  if(cmap!=="seismic") return;
+  if(seismicFor===fn && seismicCanvas) return;
+  seismicCanvas = (img&&img.naturalWidth) ? buildSeismic(img) : null;
+  seismicFor = fn;
+  if(!seismicCanvas){                // local file:// taints the canvas -> revert to grayscale
+    cmap="gray";
+    alert("The seismic color map needs the hosted site; it is not available when the file is opened locally (file://). Showing grayscale.");
+  }
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  if(img&&img.complete&&img.naturalWidth){
+    const useSeis = (cmap==="seismic" && seismicCanvas && seismicFor===IMAGES[idx]);
+    const src = useSeis ? seismicCanvas : img;
+    const sw = useSeis ? src.width : img.naturalWidth;
+    const sh = useSeis ? src.height : img.naturalHeight;
+    ctx.drawImage(src,0,0,sw,sh,view.tx,view.ty,img.naturalWidth*view.s,img.naturalHeight*view.s);
+  }
+  if(!IMAGES.length){
+    ctx.fillStyle="#ddd"; ctx.font="16px system-ui, sans-serif"; ctx.textAlign="center";
+    ctx.fillText("No radargrams loaded. Click \u201cOpen images\u2026\u201d to pick on your own PNG/JPG files.", W/2, H/2);
+    ctx.textAlign="start"; return;
+  }
+  const a=ann[IMAGES[idx]]; if(!a) return;
+  drawLine(a.surface, COLORS.surface); drawLine(a.bed, COLORS.bed);
+  if(a.uninterp){ ctx.fillStyle="rgba(200,0,0,0.85)"; ctx.font="16px sans-serif"; ctx.fillText("marked: bed not interpretable",14,24); }
+}
+let doneDismiss=false;
+function status(){
+  const fn=IMAGES[idx], a=ann[fn]||{surface:[],bed:[]};
+  const N=IMAGES.length;
+  const done=IMAGES.filter(f=>ann[f]&&((ann[f].surface.length>1&&ann[f].bed.length>1)||ann[f].uninterp)).length;
+  const last = idx===N-1;
+  document.getElementById('status').innerHTML =
+    "<b>Radargram "+(idx+1)+" / "+N+"</b>"+(last?" <span class='last'>· last one</span>":"")
+    +"<br><span class='sub'>active: "+active.toUpperCase()
+    +" &nbsp;|&nbsp; surface "+a.surface.length+" pts &middot; bed "+a.bed.length+" pts"
+    +" &nbsp;|&nbsp; completed "+done+" / "+N+"</span>";
+  const db=document.getElementById('donebar');
+  if(N>0 && done===N){ if(!doneDismiss) db.classList.add('on'); }
+  else { db.classList.remove('on'); doneDismiss=false; }
+}
+cv.addEventListener('mousedown', e=>{
+  if(e.button===2){ panning=true; panStart={x:e.offsetX,y:e.offsetY,tx:view.tx,ty:view.ty}; return; }
+  if(e.button===0){
+    if(!cur()||!img.naturalWidth) return;
+    const grab=hitPoint(e.offsetX,e.offsetY);
+    if(grab){ dragPt=grab; dragArr=ann[IMAGES[idx]][active]; cv.style.cursor="grabbing"; return; }  // move existing point
+    const p=toImg(e.offsetX,e.offsetY); const a=ann[IMAGES[idx]];
+    p.x=Math.max(0,Math.min(a.w||img.naturalWidth,p.x)); p.y=Math.max(0,Math.min(a.h||img.naturalHeight,p.y));
+    addPoint(a[active], p); dirty=true; draw(); status(); }
+});
+cv.addEventListener('mousemove', e=>{
+  if(panning){ view.tx=panStart.tx+(e.offsetX-panStart.x); view.ty=panStart.ty+(e.offsetY-panStart.y); draw(); return; }
+  if(dragPt){                                   // reposition the grabbed point
+    const a=ann[IMAGES[idx]], p=toImg(e.offsetX,e.offsetY);
+    dragPt.x=Math.max(0,Math.min(a.w||img.naturalWidth,p.x));
+    dragPt.y=Math.max(0,Math.min(a.h||img.naturalHeight,p.y));
+    dragArr.sort((u,v)=>u.x-v.x);               // keep the line ordered left -> right
+    dirty=true;
+    draw(); return;
+  }
+  cv.style.cursor = hitPoint(e.offsetX,e.offsetY) ? "grab" : "";   // hover cue over a draggable point
+});
+window.addEventListener('mouseup', ()=>{ panning=false; if(dragPt){ dragPt=null; dragArr=null; cv.style.cursor=""; } });
+cv.addEventListener('contextmenu', e=>e.preventDefault());
+cv.addEventListener('wheel', e=>{ e.preventDefault(); const f=e.deltaY<0?1.15:1/1.15;
+  view.tx=e.offsetX-(e.offsetX-view.tx)*f; view.ty=e.offsetY-(e.offsetY-view.ty)*f; view.s*=f; draw(); }, {passive:false});
+
+document.getElementById('bSurface').onclick=()=>setActive("surface");
+document.getElementById('bBed').onclick=()=>setActive("bed");
+document.getElementById('prev').onclick=()=>load(idx-1);
+document.getElementById('next').onclick=()=>load(idx+1);
+const cur=()=>ann[IMAGES[idx]];
+document.getElementById('undo').onclick=()=>{ if(!cur()) return; undoPoint(cur()[active]); dirty=true; draw(); status(); };
+document.getElementById('clear').onclick=()=>{ if(!cur()) return; cur()[active]=[]; dirty=true; draw(); status(); };
+document.getElementById('fit').onclick=()=>{ if(!img.naturalWidth) return; fitView(); draw(); };
+function syncCmapUI(){               // reflect the active colormap in the swatch buttons + cursor
+  document.getElementById('cmGray').classList.toggle('active', cmap==='gray');
+  document.getElementById('cmSeis').classList.toggle('active', cmap==='seismic');
+  cv.classList.toggle('seismic', cmap==='seismic');
+}
+function setCmap(v){ cmap=v; ensureSeismic(IMAGES[idx]); syncCmapUI(); draw(); }  // ensureSeismic may revert to "gray" on file://
+document.getElementById('cmGray').onclick=()=>setCmap('gray');
+document.getElementById('cmSeis').onclick=()=>setCmap('seismic');
+document.getElementById('doneClose').onclick=()=>{ doneDismiss=true; document.getElementById('donebar').classList.remove('on'); };
+document.getElementById('uninterp').onchange=e=>{ if(!cur()){ e.target.checked=false; return; } cur().uninterp=e.target.checked; dirty=true; draw(); status(); };
+window.addEventListener('keydown', e=>{
+  if(e.key==='s') setActive("surface");
+  else if(e.key==='b') setActive("bed");
+  else if(e.key==='ArrowRight') load(idx+1);
+  else if(e.key==='ArrowLeft') load(idx-1);
+  else if((e.ctrlKey||e.metaKey)&&e.key==='z'){ if(!cur()) return; undoPoint(cur()[active]); dirty=true; draw(); status(); }
+});
+
+function csvField(s){ s=String(s); return '"'+s.replace(/"/g,'""')+'"'; }
+document.getElementById('download').onclick=()=>{
+  if(!IMAGES.length) return;
+  if(!analyst){
+    const nm=prompt("Please enter your name or initials (used in the result file name):","");
+    if(nm===null) return;                       // cancelled -> abort download
+    analyst=(nm.trim().replace(/[^A-Za-z0-9_-]/g,"_"))||"anon";
+    status();
+  }
+  const rows=[["filename","file_size","file_attributes","region_count","region_id",
+               "region_shape_attributes","region_attributes"]];
+  IMAGES.forEach(fn=>{
+    const a=ann[fn]; if(!a) return;
+    const fa=JSON.stringify({uninterpretable:a.uninterp?"yes":"", img_w:a.w, img_h:a.h});
+    let rid=0;
+    ["surface","bed"].forEach(bnd=>{
+      const pts=a[bnd];
+      if(pts.length>1){
+        const shp=JSON.stringify({name:"polyline",all_points_x:pts.map(p=>Math.round(p.x)),all_points_y:pts.map(p=>Math.round(p.y))});
+        rows.push([fn,-1,fa,1,rid++,shp,JSON.stringify({boundary:bnd})].map(csvField));
+      }
+    });
+    if(rid===0 && a.uninterp) rows.push([fn,-1,fa,0,0,"{}","{}"].map(csvField));
+  });
+  const csv=rows.map(r=>Array.isArray(r)?r.join(","):r).join("\n");
+  const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download="analyst_"+analyst+".csv"; a.click(); URL.revokeObjectURL(url);
+  dirty=false;
+};
+
+// warn before leaving the page with picks that were not downloaded
+window.addEventListener("beforeunload", e=>{ if(dirty){ e.preventDefault(); e.returnValue=""; } });
+init();
+</script>
+</body>
+</html>

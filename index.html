@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPR surface &amp; bed picking – inter-analyst experiment</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" href="favicon.svg">
+<style>
+  :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:#1b2430; }
+  body { margin:0; background:#f5f6f8; }
+  header { background:#1f3b57; color:#fff; padding:22px 20px; }
+  header h1 { margin:0; font-size:21px; }
+  header p { margin:6px 0 0; color:#cfe0f0; font-size:14px; }
+  main { max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+  .card { background:#fff; border:1px solid #e2e6ea; border-radius:10px; padding:20px 22px; margin:18px 0; }
+  h2 { font-size:17px; margin:0 0 10px; }
+  p, li { line-height:1.55; font-size:15px; }
+  ul { padding-left:20px; } li { margin:6px 0; }
+  .surface { color:#008c8c; font-weight:600; }
+  .bed { color:#d97a00; font-weight:600; }
+  .start { text-align:center; margin:30px 0 8px; }
+  a.btn { display:inline-block; color:#fff; text-decoration:none; font-size:18px; font-weight:600;
+          padding:14px 34px; border-radius:8px; background:#1f6fc4; }
+  a.btn:hover { filter:brightness(0.92); }
+  .muted { color:#5a6675; font-size:13px; }
+  .callout { background:#eef6ff; border:1px solid #bcdcff; border-left:4px solid #1f6fc4;
+             border-radius:6px; padding:12px 14px; margin:12px 0; font-size:14.5px; }
+  .callout strong { color:#1f3b57; }
+  .social { margin-top:12px; display:flex; gap:10px; align-items:center; }
+  .social a { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px;
+              border-radius:50%; color:#fff; text-decoration:none; font-weight:700; font-size:13px;
+              transition:filter .15s ease; }
+  .social a:hover { filter:brightness(1.08); }
+  .social svg { width:18px; height:18px; fill:currentColor; display:block; }
+  .social .li { background:#0a66c2; }
+  .social .bs { background:#1185fe; }
+  .social .rg { background:#00ccbb; }
+  .social .or { background:transparent; }
+  .social .or svg { width:34px; height:34px; fill:#a6ce39; }
+  kbd { background:#eef1f4; border:1px solid #cdd3da; border-radius:4px; padding:1px 6px; font-size:13px; }
+  ol.steps li { margin:8px 0; }
+  header .meta { margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; }
+  header .meta span { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3);
+                      padding:4px 12px; border-radius:20px; font-size:12.5px; color:#eaf2fb; }
+  .cta { background:#eef6ff; border:1px solid #bcdcff; border-radius:12px; padding:22px 20px; margin:18px 0; text-align:center; }
+  .cta .lead { font-size:15.5px; font-weight:600; color:#1f3b57; margin:0 0 16px; }
+  .cta a.btn { margin:6px; }
+  .callout.warn { background:#fff6e9; border-color:#f4d28a; border-left-color:#e0922a; }
+  .callout.warn strong { color:#8a5410; }
+  h2 .ico { margin-right:7px; }
+  /* experiment-closed notice and resource links */
+  .closed { background:#fff; border:1px solid #e2e6ea; border-left:5px solid #2e8b57; border-radius:10px;
+            padding:20px 22px; margin:18px 0; }
+  .closed h2 { color:#14532d; }
+  .links { list-style:none; padding:0; margin:14px 0 4px; display:grid; gap:10px; }
+  .links li { margin:0; display:flex; gap:12px; align-items:baseline; }
+  .links .tag { flex:0 0 92px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#5a6675; }
+  .soon { display:inline-block; font-size:11.5px; font-weight:600; color:#8a5410; background:#fff6e9;
+          border:1px solid #f4d28a; border-radius:10px; padding:0 8px; margin-left:6px; }
+  .archived { font-size:13px; color:#5a6675; margin:34px 0 -6px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  footer { max-width:760px; margin:0 auto; padding:0 20px 40px; font-size:13px; color:#5a6675; }
+  footer a { color:#1f3b57; }
+</style>
+</head>
+<body>
+<header>
+  <h1>GPR survey: picking the glacier surface and bed</h1>
+  <p>Inter-analyst comparison of manual reflection picking in UAV-borne ground-penetrating radar.</p>
+  <div class="meta"><span>🔒 experiment closed</span><span>🗂 15 radargrams · 40 analysts</span><span>🌐 runs in your browser</span><span>🖱 needs a mouse</span></div>
+</header>
+
+<main>
+  <div class="closed">
+    <h2><span class="ico">🔒</span>The experiment is closed – thank you!</h2>
+    <p>Data collection has ended: <strong>40 analysts</strong> picked the glacier surface and bed on the 15 radargrams. Many thanks to everyone who took part. The results, the anonymised picks and the radargrams are published here:</p>
+    <ul class="links">
+      <!-- TODO-PREPRINT: replace href="#" and remove the "coming soon" badge once the preprint is online -->
+      <li><span class="tag">Paper</span><span>Siebenbrunner and others: <em>The human factor in GPR-derived ice thickness: Inter-analyst variability as a benchmark for automated boundary layer picking</em> – <a href="#">preprint</a><span class="soon">coming soon</span></span></li>
+      <!-- TODO-ZENODO: replace href="#" with the dataset DOI (https://doi.org/10.5281/zenodo.XXXXXXX) and remove the badge -->
+      <li><span class="tag">Dataset</span><span>Analyst picks, model picks, human consensus and radargrams – <a href="#">Zenodo</a><span class="soon">coming soon</span></span></li>
+      <li><span class="tag">Code</span><span>This picking tool – <a href="https://github.com/anna7br/gpr-picking-experiment" target="_blank" rel="noopener">github.com/anna7br/gpr-picking-experiment</a> (MIT licence)</span></li>
+    </ul>
+  </div>
+
+  <div class="cta">
+    <p class="lead">The picking tool stays online as a demo.</p>
+    <a class="btn" href="bed_pick_annotator.html">Open the picking tool &rarr;</a>
+    <p class="muted" style="margin-top:14px;">Load radargram images with <strong>Open images…</strong>: your own PNG/JPG files, or the 15 experiment radargrams from <code>radargrams_png.zip</code> in the Zenodo dataset. Images are opened locally and never leave your browser; picks are saved with <strong>Download my results (CSV)</strong> in VIA-compatible format.</p>
+  </div>
+
+  <p class="archived">Original participant instructions (archived)</p>
+  <div class="card">
+    <h2><span class="ico">ℹ️</span>What this is</h2>
+    <p>Thank you for taking part! We are measuring how consistently experts pick reflections in glacier GPR radargrams. On each image you draw <span class="surface">two lines</span>: the glacier <span class="surface">surface</span> and the <span class="bed">bed</span>. There are no graded "right" answers – we want your natural interpretation, so please pick as you normally would.</p>
+  </div>
+
+
+  <div class="card">
+    <h2><span class="ico">✏️</span>How to pick</h2>
+    <ul>
+      <li>Choose the horizon with the <span class="surface">Surface (s)</span> / <span class="bed">Bed (b)</span> buttons (or the <kbd>s</kbd> / <kbd>b</kbd> keys). Surface draws in cyan, bed in orange.</li>
+      <li><span class="surface">Surface:</span> left-click along the top reflection of the ice body.</li>
+    </ul>
+    <div class="callout">
+      <strong>⚠ Note – snow cover:</strong> some radargrams were recorded with a <strong>thin layer of winter snow on top of the glacier</strong>. On those images the uppermost reflection is the <strong>air–snow surface</strong>, and a second, slightly deeper reflection marks the <strong>snow–ice interface</strong> (the true top of the ice). Please pick the <span class="surface">surface</span> along the <strong>snow–ice interface</strong> – the top of the ice – not the air–snow surface, so that the snow layer is excluded from the ice thickness.
+    </div>
+    <ul>
+      <li><span class="bed">Bed:</span> left-click along the ice–bedrock reflection – the bottom of the ice. Where the ice lies above an air-filled cavity, follow the <em>bottom of the ice</em> (the ice–air interface inside the cavity), not the rock below.</li>
+      <li>Add points left to right. <strong>To move a point</strong>, drag it to a new position (grab it with the left mouse button); the line always reconnects left to right. <strong>Zoom</strong> with the mouse wheel, <strong>pan</strong> by dragging with the <strong>right</strong> mouse button. "Undo point" (<kbd>Ctrl/Cmd</kbd>+<kbd>Z</kbd>) and "Clear horizon" act on the horizon you are currently picking.</li>
+      <li>If you <strong>cannot interpret the bed</strong> on an image, tick "bed not interpretable" (you can still pick the surface) and move on – please do not guess.</li>
+      <li>If you are only sure in parts of the radargram, you can use a <strong>"straight" connector</strong> between areas of high confidence. During the analysis, such sections will be discarded automatically.</li>
+      <li>Move between images with <strong>Next / Prev</strong> (or the arrow keys); your lines are kept. The counter in the <strong>top-left corner</strong> shows which radargram you are on (e.g. "Radargram 3 / 15") so you can see how many remain.</li>
+    </ul>
+    <div class="callout warn">
+      <strong>Note – image quality varies:</strong> all radargrams were processed together in a single batch with identical settings, so some look clear while others are noisier. The surveys used center frequencies of 75–150 MHz, with expected ice thicknesses of up to about 100 m. Migration was performed, although it apparently did not yield the desired effects everywhere; note that alpine glaciers are considerably more heterogeneous than ice sheets. Please pick as best you can. If a radargram looks <strong>particularly poor or hard to interpret</strong>, a short comment about it (by email, see below) would be very welcome.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">✅</span>When you are finished</h2>
+    <ol class="steps">
+      <li>When you have picked the last radargram, a <strong>"thank you" message</strong> appears in the tool. Click <strong>Download my results (CSV)</strong> – this saves a file named <code>analyst_YOURNAME.csv</code>.</li>
+      <li><strong>Upload that file</strong> using the green <strong>Upload results</strong> button (at the top of this page, or inside the picking tool). You will be asked to sign in to Google so the file is saved to our project drive. <em>(The upload form is closed.)</em></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2><span class="ico">🔎</span>Please</h2>
+    <ul>
+      <li>Work <strong>independently</strong> – do not discuss or compare picks with other participants.</li>
+      <li>Pick <strong>both</strong> horizons on every image you can.</li>
+      <li>Try to finish in <strong>one sitting</strong>: your work is held in the browser tab and is saved only when you click Download. Nothing is sent anywhere until you upload.</li>
+    </ul>
+  </div>
+
+  <div class="start">
+    <a class="btn" href="bed_pick_annotator.html">Open the picking tool &rarr;</a>
+    <p class="muted">The tool runs entirely in your browser. You can return to these instructions anytime via the "? Instructions" button in the tool.</p>
+  </div>
+  <div class="card">
+    <h2><span class="ico">🙏</span>Thank you</h2>
+    <p>Your time and expertise are greatly appreciated – these picks directly support the evaluation of UAV-borne GPR ice-thickness measurements in the <a href="https://www.georesearch.ac.at/en/areas/research/research-projects/project-meltai/" target="_blank" rel="noopener">MELT.AI</a> project. If you have any questions about the task or run into technical problems, please get in touch:</p>
+    <p><strong>Anna Siebenbrunner</strong><br>
+       GEORESEARCH &amp; Technical University of Munich<br>
+       <a href="mailto:anna.siebenbrunner@georesearch.ac.at">anna.siebenbrunner@georesearch.ac.at</a></p>
+    <p class="social">
+      <a class="li" href="https://www.linkedin.com/in/anna-siebenbrunner/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.25 8h4.5v16h-4.5V8zm7.5 0h4.31v2.19h.06c.6-1.14 2.07-2.34 4.26-2.34 4.56 0 5.4 3 5.4 6.9V24h-4.5v-7.36c0-1.76-.03-4.02-2.45-4.02-2.45 0-2.83 1.92-2.83 3.9V24h-4.5V8z"/></svg></a>
+      <a class="bs" href="https://bsky.app/profile/anna7brunner.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky" title="Bluesky"><svg viewBox="0 0 568 501" aria-hidden="true"><path d="M123.1 33.5C188.6 82.7 259 182.5 284.8 236c25.9-53.5 96.2-153.3 161.7-202.5C493.9-1.9 568-29.4 568 55.2c0 16.9-9.7 142-15.4 162.3-19.9 70.6-91.9 88.6-155.9 77.7 111.9 19 140.3 82.1 78.8 145.2-116.7 119.7-167.8-30.1-180.9-68.4-2.4-7-3.5-10.3-3.5-7.5 0-2.8-1.1.5-3.5 7.5-13.1 38.3-64.2 188.1-180.9 68.4-61.5-63.1-33.2-126.2 78.8-145.2-64-10.9-136-28.9-155.9-77.7C24.6 197.2 14.9 72.1 14.9 55.2c0-84.6 74.1-57.1 121.5-21.7Z"/></svg></a>
+      <a class="rg" href="https://www.researchgate.net/profile/Anna-Siebenbrunner" target="_blank" rel="noopener" aria-label="ResearchGate" title="ResearchGate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a3.193 3.193 0 0 0-.112.437 8.365 8.365 0 0 0-.078.53 9 9 0 0 0-.05.727c-.01.282-.013.621-.013 1.016a31.121 31.123 0 0 0 .014 1.017 9 9 0 0 0 .05.727 7.946 7.946 0 0 0 .077.53h-.005a3.334 3.334 0 0 0 .113.438c.245.743.65 1.303 1.214 1.68.565.376 1.256.564 2.075.564.8 0 1.536-.213 2.105-.603.57-.39.94-.916 1.175-1.65.076-.235.135-.558.177-.93a10.9 10.9 0 0 0 .043-1.207v-.82c0-.095-.047-.142-.14-.142h-3.064c-.094 0-.14.047-.14.141v.956c0 .094.046.14.14.14h1.666c.056 0 .084.03.084.086 0 .36 0 .62-.036.865-.038.244-.1.447-.147.606-.108.385-.348.664-.638.876-.29.212-.738.35-1.227.35-.545 0-.901-.15-1.21-.353-.306-.203-.517-.454-.67-.915a3.136 3.136 0 0 1-.147-.762 17.366 17.367 0 0 1-.034-.656c-.01-.26-.014-.572-.014-.939a26.401 26.403 0 0 1 .014-.938 15.821 15.822 0 0 1 .035-.656 3.19 3.19 0 0 1 .148-.76 1.89 1.89 0 0 1 .742-1.01c.344-.244.593-.352 1.137-.352.508 0 .815.096 1.144.303.33.207.528.492.764.925.047.094.111.118.198.07l1.044-.43c.075-.048.09-.115.042-.199a3.549 3.549 0 0 0-.466-.742 3 3 0 0 0-.679-.607 3.313 3.313 0 0 0-.903-.41A4.068 4.068 0 0 0 19.586 0zM8.217 5.836c-1.69 0-3.036.086-4.297.086-1.146 0-2.291 0-3.007-.029v.831l1.088.2c.744.144 1.174.488 1.174 2.264v11.288c0 1.777-.43 2.12-1.174 2.263l-1.088.2v.832c.773-.029 2.12-.086 3.465-.086 1.29 0 2.951.057 3.667.086v-.831l-1.49-.2c-.773-.115-1.174-.487-1.174-2.264v-4.784c.688.057 1.29.057 2.206.057 1.748 3.123 3.41 5.472 4.355 6.56.86 1.032 2.177 1.691 3.839 1.691.487 0 1.003-.086 1.318-.23v-.744c-1.031 0-2.063-.716-2.808-1.518-1.26-1.376-2.95-3.582-4.355-6.074 2.32-.545 4.04-2.722 4.04-4.9 0-3.208-2.492-4.698-5.758-4.698zm-.515 1.29c2.406 0 3.839 1.26 3.839 3.552 0 2.263-1.547 3.782-4.097 3.782-.974 0-1.404-.03-2.063-.086v-7.19c.66-.059 1.547-.059 2.32-.059z"/></svg></a>
+      <a class="or" href="https://orcid.org/0000-0002-2255-2354" target="_blank" rel="noopener" aria-label="ORCID iD" title="ORCID"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/></svg></a>
+    </p>
+  </div>
+</main>
+<footer>
+  Picking tool © 2026 Anna Siebenbrunner, released under the <a href="https://github.com/anna7br/gpr-picking-experiment/blob/main/LICENSE">MIT licence</a>.
+  Radargrams and picks: see the Zenodo dataset (CC BY 4.0).
+</footer>
+</body>
+</html>

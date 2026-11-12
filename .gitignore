@@ -1,0 +1,22 @@
+# Research data is published on Zenodo only (CC BY 4.0), never in this repository
+images/
+images.js
+*.png
+*.jpg
+*.jpeg
+*.npy
+*.sgy
+*.segy
+*.zip
+
+# Participant submissions must never be committed
+analyst_*.csv
+annotations*/
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+__pycache__/
